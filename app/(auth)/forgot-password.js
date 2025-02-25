@@ -2,29 +2,29 @@ import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { TextInput, Button, Surface, Text } from 'react-native-paper';
 import { router } from 'expo-router';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { authService } from '../../src/services/auth';
-import { useAuth } from '../../src/context/AuthContext';
 
-export default function LoginScreen() {
+export default function ForgotPasswordScreen() {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const { setUserToken } = useAuth();
+  const [success, setSuccess] = useState('');
 
-  const handleLogin = async () => {
-    if (!email || !password) {
-      setError('Please fill in all fields');
+  const handleForgotPassword = async () => {
+    if (!email) {
+      setError('Please enter your email');
       return;
     }
 
     try {
       setLoading(true);
       setError('');
-      const response = await authService.login(email, password);
-      setUserToken(response.token);
-      router.replace('/(tabs)');
+      const response = await authService.forgotPassword(email);
+      setSuccess('Reset code has been sent to your email');
+      router.push({
+        pathname: '/reset-password',
+        params: { email }
+      });
     } catch (error) {
       setError(error.toString());
     } finally {
@@ -35,6 +35,9 @@ export default function LoginScreen() {
   return (
     <View style={styles.container}>
       <Surface style={styles.surface}>
+        <Text variant="titleLarge" style={styles.title}>Forgot Password</Text>
+        {error ? <Text style={styles.errorText}>{error}</Text> : null}
+        {success ? <Text style={styles.successText}>{success}</Text> : null}
         <TextInput
           label="Email"
           value={email}
@@ -44,34 +47,19 @@ export default function LoginScreen() {
           autoCapitalize="none"
           style={styles.input}
         />
-        <TextInput
-          label="Password"
-          value={password}
-          onChangeText={setPassword}
-          mode="outlined"
-          secureTextEntry
-          style={styles.input}
-        />
-        {error ? <Text style={styles.errorText}>{error}</Text> : null}
         <Button 
           mode="contained" 
-          onPress={handleLogin}
+          onPress={handleForgotPassword}
           loading={loading}
           style={styles.button}
         >
-          Login
+          Send Reset Code
         </Button>
         <Button 
           mode="text" 
-          onPress={() => router.push('/forgot-password')}
+          onPress={() => router.back()}
         >
-          Forgot Password?
-        </Button>
-        <Button 
-          mode="text" 
-          onPress={() => router.push('/signup')}
-        >
-          Don't have an account? Sign up
+          Back to Login
         </Button>
       </Surface>
     </View>
@@ -89,6 +77,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     elevation: 4,
   },
+  title: {
+    textAlign: 'center',
+    marginBottom: 16,
+  },
   input: {
     marginBottom: 12,
   },
@@ -99,5 +91,11 @@ const styles = StyleSheet.create({
   errorText: {
     color: 'red',
     marginBottom: 12,
+    textAlign: 'center',
+  },
+  successText: {
+    color: 'green',
+    marginBottom: 12,
+    textAlign: 'center',
   }
 });
