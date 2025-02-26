@@ -1,50 +1,141 @@
-# Welcome to your Expo app 👋
+# Task Manager Frontend
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A React Native mobile application for managing tasks, built with Expo and Redux Toolkit.
 
-## Get started
+## Architecture
 
-1. Install dependencies
+The application follows a modular architecture with the following structure:
 
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-    npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```plaintext
+task-manager-frontend/
+├── app/                      # Main application routes
+│   ├── (auth)/              # Authentication related screens
+│   │   ├── _layout.js       # Auth navigation layout
+│   │   ├── login.js         # Login screen
+│   │   ├── signup.js        # Signup screen
+│   │   ├── forgot-password.js
+│   │   └── reset-password.js
+│   ├── (tabs)/              # Main app tabs
+│   │   ├── _layout.js       # Tab navigation layout
+│   │   ├── index.js         # Tasks list screen
+│   │   └── profile.js       # User profile screen
+│   ├── task/                # Task related screens
+│   │   └── [id].js          # Task detail/edit screen
+│   └── _layout.js           # Root layout with providers
+├── src/
+│   ├── context/             # React Context providers
+│   │   └── AuthContext.js   # Authentication context
+│   ├── services/            # API services
+│   │   ├── auth.js          # Authentication service
+│   │   └── task.js          # Task management service
+│   └── store/               # Redux store configuration
+│       ├── index.js         # Store setup
+│       └── slices/          # Redux slices
+│           └── authSlice.js # Auth state management
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Features
 
-## Learn more
+- User Authentication (Login/Signup)
+- Password Reset Functionality
+- Task Management (CRUD operations)
+- Gesture Handler for smooth animations
+- Persistent Authentication
+- Error Handling
+- Loading States
 
-To learn more about developing your project with Expo, look at the following resources:
+## Tech Stack
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- React Native
+- Expo Router
+- Redux Toolkit
+- React Native Paper
+- Axios
+- AsyncStorage
+- React Native Gesture Handler
 
-## Join the community
+## Prerequisites
 
-Join our community of developers creating universal apps.
+- Node.js (v14 or later)
+- npm or yarn
+- Expo CLI
+- iOS Simulator or Android Emulator
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/dakshbhardwaj/Task-manager-frontend.git
+cd Task-manager-frontend
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Start the development server:
+```bash
+npx expo start
+```
+
+## Running on Simulators/Emulators
+
+- For iOS (requires macOS):
+```bash
+npx expo run:ios
+```
+
+- For Android:
+```bash
+npx expo run:android
+```
+
+## Environment Setup
+
+The application uses a backend API hosted at:
+```
+https://task-manager-backend-wxdz.onrender.com
+```
+
+## Building for Production
+
+1. Install EAS CLI:
+```bash
+npm install -g eas-cli
+```
+
+2. Build for Android:
+```bash
+eas build -p android --profile preview
+```
+
+3. Build for iOS:
+```bash
+eas build -p ios
+```
+
+## Project Structure Details
+
+### Authentication Flow
+- Uses Context API for managing auth state
+- JWT token-based authentication
+- Persistent login using AsyncStorage
+- Protected routes for authenticated users
+
+### State Management
+- Redux Toolkit for global state management
+- Auth slice for managing user authentication state
+- Async thunks for handling API calls
+
+### Navigation
+- File-based routing using Expo Router
+- Tab navigation for main app screens
+- Stack navigation for auth flows
+- Dynamic routing for task details
+
+### UI Components
+- React Native Paper components
+- Custom styled components
+- Gesture handler integration
+- Loading and error states
